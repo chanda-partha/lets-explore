@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BounceMap — Random Location Explorer</title>
+  <meta name="description" content="Drop a ludo token anywhere on Earth. Discover random places with physics-based bounce animation, reverse geocoding, and an explorer's spirit."/>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23e85d2f'/><text y='21' x='16' text-anchor='middle' font-size='18'>🎯</text></svg>"/>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     LANDING SCREEN
+═══════════════════════════════════════════ -->
+<div id="landing-screen">
+  <div class="landing-bg">
+    <div class="bg-orb orb1"></div>
+    <div class="bg-orb orb2"></div>
+    <div class="bg-orb orb3"></div>
+    <div class="grid-lines"></div>
+  </div>
+  <nav class="landing-nav">
+    <div class="logo"><span class="logo-icon">🎯</span> Bounce<span>Map</span></div>
+    <div class="nav-links">
+      <a href="#features-section">Features</a>
+      <a href="#how-section">How it works</a>
+      <button class="nav-cta" id="nav-launch-btn">Launch App</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">✦ Random Location Explorer</div>
+    <h1 class="hero-title">Drop a Token.<br/><em>Discover the World.</em></h1>
+    <p class="hero-sub">Physics-powered token bouncing onto any country on Earth. Real place names, satellite imagery, and an explorer's spirit — all in one game-like map experience.</p>
+    <div class="hero-ctas">
+      <button class="cta-primary" id="hero-launch-btn">
+        <span class="cta-icon">🎯</span> Start Bouncing
+      </button>
+      <button class="cta-secondary" id="hero-demo-btn">
+        <span class="cta-icon">▶</span> Watch Demo
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-n">15+</span><span class="stat-l">Countries</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-n">∞</span><span class="stat-l">Bounces</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-n">3</span><span class="stat-l">Map Layers</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-n">8x</span><span class="stat-l">Multiplayer</span></div>
+    </div>
+
+    <!-- Floating mock tokens -->
+    <div class="floating-tokens">
+      <div class="ft ft1">🔴</div>
+      <div class="ft ft2">🔵</div>
+      <div class="ft ft3">🟡</div>
+      <div class="ft ft4">🟢</div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features-section">
+    <div class="section-label">✦ Features</div>
+    <h2 class="section-title">Everything an explorer needs</h2>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🎯</div>
+        <h3>Physics Bounce</h3>
+        <p>Realistic ludo-style token drops from the top of the screen with multi-bounce physics and rotation.</p>
+      </div>
+      <div class="feat-card feat-card--accent">
+        <div class="feat-icon">🗺</div>
+        <h3>Real Geocoding</h3>
+        <p>Every landed point is reverse-geocoded via OpenStreetMap — real place names, districts, and coordinates.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🛰</div>
+        <h3>3 Map Layers</h3>
+        <p>Switch between Street, Satellite, and Terrain views. Each layer tells a different story about the land.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">👥</div>
+        <h3>Multiplayer Mode</h3>
+        <p>Launch 2–8 colored tokens simultaneously for a race across the map. Perfect for group play.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🎡</div>
+        <h3>Spin Wheel</h3>
+        <p>Spin a wheel to pick a terrain category before your bounce — add a layer of luck to exploration.</p>
+      </div>
+      <div class="feat-card feat-card--accent">
+        <div class="feat-icon">⭐</div>
+        <h3>Save Favorites</h3>
+        <p>Loved a spot? Save it. Build a personal atlas of discovered places from all your sessions.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔊</div>
+        <h3>Sound Effects</h3>
+        <p>Satisfying bounce and landing sounds using the Web Audio API. Every landing feels like a win.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📱</div>
+        <h3>Mobile Friendly</h3>
+        <p>Fully responsive design. Tap the map on your phone to place tokens anywhere in the selected country.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how-section" id="how-section">
+    <div class="section-label">✦ How it works</div>
+    <h2 class="section-title">Three steps to discovery</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h3>Choose a Country</h3>
+          <p>Pick from 15 countries — from Bangladesh to Brazil. The map instantly flies to your selection.</p>
+        </div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h3>Bounce the Token</h3>
+          <p>Hit the big orange button. Watch your ludo token arc down from above with realistic physics.</p>
+        </div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h3>Discover the Place</h3>
+          <p>The map zooms in. You get the real place name, district, and coordinates. Save it or bounce again!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="final-cta">
+    <h2>Ready to get lost?</h2>
+    <p>No sign-up. No cost. Just bounce.</p>
+    <button class="cta-primary large" id="final-launch-btn">
+      <span class="cta-icon">🎯</span> Open BounceMap
+    </button>
+  </section>
+
+  <footer class="landing-footer">
+    <div class="footer-logo"><span class="logo-icon">🎯</span> BounceMap</div>
+    <p>Built with Leaflet.js · OpenStreetMap · Web Audio API</p>
+    <p class="footer-copy">© 2025 BounceMap. Made for explorers.</p>
+  </footer>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     MAIN APP
+═══════════════════════════════════════════ -->
+<div id="app-screen" class="hidden">
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Token animation canvas -->
+  <canvas id="token-canvas"></canvas>
+
+  <!-- TOP BAR -->
+  <header id="top-bar">
+    <button id="back-to-landing" class="glass-btn icon-btn" title="Back to Home">←</button>
+    <div class="logo-small">🎯 <span>Bounce<em>Map</em></span></div>
+
+    <select id="country-select" class="glass-select">
+      <option value="bangladesh">🇧🇩 Bangladesh</option>
+      <option value="india">🇮🇳 India</option>
+      <option value="pakistan">🇵🇰 Pakistan</option>
+      <option value="usa">🇺🇸 United States</option>
+      <option value="uk">🇬🇧 United Kingdom</option>
+      <option value="france">🇫🇷 France</option>
+      <option value="germany">🇩🇪 Germany</option>
+      <option value="japan">🇯🇵 Japan</option>
+      <option value="brazil">🇧🇷 Brazil</option>
+      <option value="australia">🇦🇺 Australia</option>
+      <option value="canada">🇨🇦 Canada</option>
+      <option value="china">🇨🇳 China</option>
+      <option value="indonesia">🇮🇩 Indonesia</option>
+      <option value="nigeria">🇳🇬 Nigeria</option>
+      <option value="kenya">🇰🇪 Kenya</option>
+    </select>
+
+    <div class="view-toggle">
+      <button class="vbtn active" data-layer="streets">Streets</button>
+      <button class="vbtn" data-layer="satellite">Satellite</button>
+      <button class="vbtn" data-layer="terrain">Terrain</button>
+    </div>
+
+    <div class="top-actions">
+      <button class="glass-btn icon-btn" id="sound-toggle" title="Toggle Sound">🔊</button>
+      <button class="glass-btn icon-btn" id="help-btn" title="Help">?</button>
+    </div>
+  </header>
+
+  <!-- LEFT PANEL: multiplayer + spin -->
+  <aside id="left-panel">
+    <div class="glass-card" id="multi-card">
+      <div class="card-header">
+        <span class="card-icon">👥</span>
+        <span class="card-title">Multiplayer</span>
+        <button class="toggle-pill" id="multi-toggle">OFF</button>
+      </div>
+      <div id="multi-options" class="hidden">
+        <label class="slider-label">Tokens: <strong id="multi-val">3</strong></label>
+        <input type="range" id="multi-slider" min="2" max="8" value="3" step="1" class="range-input"/>
+        <div class="token-preview" id="token-preview"></div>
+      </div>
+    </div>
+
+    <div class="glass-card" id="zone-card">
+      <div class="card-header">
+        <span class="card-icon">🎨</span>
+        <span class="card-title">Prob. Zones</span>
+        <button class="toggle-pill" id="zone-toggle">OFF</button>
+      </div>
+      <div id="zone-options" class="hidden">
+        <p class="zone-info">Colored zones show probability weights on the map.</p>
+        <div class="zone-legend">
+          <div class="zl-item"><span class="zl-dot" style="background:#e63946"></span> High (40%)</div>
+          <div class="zl-item"><span class="zl-dot" style="background:#f5a623"></span> Mid (35%)</div>
+          <div class="zl-item"><span class="zl-dot" style="background:#22c55e"></span> Low (25%)</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="glass-btn spin-trigger-btn" id="spin-trigger">
+      <span>🎡</span> Spin Wheel
+    </button>
+  </aside>
+
+  <!-- RIGHT PANEL: info + history + favorites -->
+  <aside id="right-panel">
+    <!-- Info card -->
+    <div class="glass-card info-card hidden" id="info-card">
+      <div class="info-header">
+        <div class="info-marker-dot"></div>
+        <span class="info-country-flag" id="info-flag">🗺</span>
+      </div>
+      <div class="info-place" id="place-name">—</div>
+      <div class="info-district" id="place-district">—</div>
+      <div class="info-coords" id="place-coords">0.00000, 0.00000</div>
+      <div class="info-actions">
+        <button class="action-btn save-btn" id="save-fav-btn">★ Save</button>
+        <button class="action-btn share-btn" id="share-btn">↗ Share</button>
+        <button class="action-btn copy-btn" id="copy-coords-btn">⎘ Copy</button>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="glass-card" id="history-card">
+      <div class="card-header">
+        <span class="card-icon">🕐</span>
+        <span class="card-title">History</span>
+        <button class="clear-btn" id="clear-history-btn">Clear</button>
+      </div>
+      <div id="history-list" class="scroll-list">
+        <div class="empty-state">No bounces yet — hit the button!</div>
+      </div>
+    </div>
+
+    <!-- Favorites -->
+    <div class="glass-card" id="favorites-card">
+      <div class="card-header">
+        <span class="card-icon">⭐</span>
+        <span class="card-title">Favorites</span>
+        <button class="clear-btn" id="clear-favs-btn">Clear</button>
+      </div>
+      <div id="fav-list" class="scroll-list">
+        <div class="empty-state">Save locations to build your atlas</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- BOTTOM BAR -->
+  <div id="bottom-bar">
+    <div class="bounce-count-wrap">
+      <span class="bounce-count-label">Bounces</span>
+      <span class="bounce-count-num" id="bounce-count">0</span>
+    </div>
+    <button id="bounce-btn" class="bounce-btn">
+      <span class="btn-text">🎯 Bounce Token!</span>
+      <span class="btn-ring"></span>
+    </button>
+    <div class="session-info">
+      <span class="session-label">Session</span>
+      <span class="session-timer" id="session-timer">00:00</span>
+    </div>
+  </div>
+
+  <!-- HELP OVERLAY -->
+  <div id="help-overlay" class="overlay hidden">
+    <div class="overlay-backdrop" id="help-backdrop"></div>
+    <div class="overlay-panel glass-panel">
+      <button class="close-btn" id="help-close">✕</button>
+      <h2>How to use BounceMap</h2>
+      <div class="help-grid">
+        <div class="help-item"><kbd>🎯</kbd><p>Press <strong>Bounce Token</strong> to drop a token on a random location in the selected country.</p></div>
+        <div class="help-item"><kbd>🗺</kbd><p><strong>Click the map</strong> anywhere inside the country boundaries to manually place a token.</p></div>
+        <div class="help-item"><kbd>🛰</kbd><p>Toggle <strong>Streets / Satellite / Terrain</strong> views from the top bar.</p></div>
+        <div class="help-item"><kbd>👥</kbd><p>Enable <strong>Multiplayer</strong> to bounce 2–8 colored tokens simultaneously.</p></div>
+        <div class="help-item"><kbd>🎡</kbd><p>Open the <strong>Spin Wheel</strong> to pick a terrain category before your bounce.</p></div>
+        <div class="help-item"><kbd>⭐</kbd><p><strong>Save Favorites</strong> after landing to build your personal discovered-places atlas.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPIN OVERLAY -->
+  <div id="spin-overlay" class="overlay hidden">
+    <div class="overlay-backdrop" id="spin-backdrop"></div>
+    <div class="overlay-panel glass-panel spin-panel">
+      <button class="close-btn" id="spin-close">✕</button>
+      <h2>Spin the Wheel</h2>
+      <p class="spin-sub">Land on a terrain category before your bounce</p>
+      <div class="spin-wheel-wrap">
+        <canvas id="spin-canvas" width="300" height="300"></canvas>
+        <div id="spin-needle"></div>
+        <div id="spin-center-dot"></div>
+      </div>
+      <div id="spin-result-display" class="hidden">
+        <div class="spin-result-badge" id="spin-result-badge">—</div>
+      </div>
+      <div class="spin-actions">
+        <button id="spin-btn" class="cta-primary">SPIN!</button>
+        <button id="spin-and-bounce-btn" class="cta-secondary hidden">🎯 Bounce Now!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE TOAST -->
+  <div id="toast" class="toast hidden">Link copied to clipboard!</div>
+
+</div><!-- /app-screen -->
+
+<script src="app.js"></script>
+</body>
+</html>
